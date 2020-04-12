@@ -8,7 +8,7 @@
 import scrapy
 
 
-class SpiderufcItem(scrapy.Item):
+class SpiderFighterItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     nickname = scrapy.Field()
@@ -19,3 +19,4 @@ class SpiderufcItem(scrapy.Item):
     win_subm = scrapy.Field()
     strike_prec = scrapy.Field()
     grap_prec = scrapy.Field()
+
