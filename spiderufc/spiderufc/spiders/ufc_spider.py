@@ -5,32 +5,35 @@ from spiderufc.items import SpiderFighterItem
 
 class UfcSpider(scrapy.Spider):
     name =  'ufc'
-    allowed_domains = ["espn.com"]
+    allowed_domains = ["espn.com", "ufc.com"]
     fightersUrls = []
-    ufc = 'https://www.ufc.com.br'
+    ufc = 'https://www.ufc.com'
 
     def start_requests(self):
-        urls = ['https://www.ufc.com.br/rankings']
+        urls = ['https://www.ufc.com/rankings']
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parseCategoryList)
 
     def parseCategoryList(self, response):
         #TODO usar mais de um parse
-        #pegar caregoria, iterar pela categoria pegando urls de lutadores, indice 0 sendo o campeao na lista Fighters
-        category = response.xpath('/html/body/div[1]/div[2]/main/div[1]/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div[11]/div[2]/table//tbody//tr')
-        championUrl =  self.ufc + response.xpath('/html/body/div[1]/div[2]/main/div[1]/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div[7]/div[2]/table/caption/div/div[1]/h5/div/div/div/a/@href').extract_first()
-        self.fightersUrls.append(championUrl)
-
-        #pega a tabela de lutadoras peso-palha:
-        #fightersList = response.xpath('/html/body/div[1]/div[2]/main/div[1]/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div[11]/div[2]/table//tr')
+        #essa tabela é a tabela da categoria, os seletores pra baixo são relativos desta
+        table = response.xpath('/html/body/div[1]/div[2]/main/div[1]/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div[11]/div[2]/table')
+        category = table.xpath('.//tbody//tr')
+        championUrl = table.xpath('.//caption/div/div[1]/h5/div/div/div/a/@href').extract_first()
+        self.fightersUrls.append(self.ufc + str(championUrl))
 
         for f in category:
             fgt = self.ufc + f.xpath('td//a/@href').extract_first()
             self.fightersUrls.append(fgt)
 
+        for fighter in self.fightersUrls:
+            yield scrapy.Request(url=fighter, callback=self.parseFighterInfo)
+
         print(self.fightersUrls)
 
-        '''
+
+    def parseFighterInfo(self, response):
+
         loaderFighter = ItemLoader(item=SpiderFighterItem(), response=response)
 
         loaderFighter.add_value('nickname', response.xpath('normalize-space(.//*[@class="field field-name-nickname"])').extract_first())
@@ -42,5 +45,5 @@ class UfcSpider(scrapy.Spider):
         loaderFighter.add_value('strike_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[1]/div/div/div[1]/div/svg/text/text()').extract_first())
         loaderFighter.add_value('grap_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[2]/div/div/div[1]/div/svg/text/text()').extract_first())
 
+        #print(loaderFighter.load_item())
         yield loaderFighter.load_item()
-        '''
