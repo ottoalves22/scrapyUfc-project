@@ -1,7 +1,13 @@
 import scrapy
 from scrapy.loader import ItemLoader
-
 from spiderufc.items import SpiderFighterItem
+from mongoengine import connect
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+connect('ufcData', host=MONGO_URI)
 
 class UfcSpider(scrapy.Spider):
     name =  'ufc'
@@ -45,5 +51,4 @@ class UfcSpider(scrapy.Spider):
         loaderFighter.add_value('strike_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[1]/div/div/div[1]/div/svg/text/text()').extract_first())
         loaderFighter.add_value('grap_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[2]/div/div/div[1]/div/svg/text/text()').extract_first())
 
-        #print(loaderFighter.load_item())
         yield loaderFighter.load_item()
