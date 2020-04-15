@@ -14,9 +14,8 @@ class SpiderFighterItem(scrapy.Item):
     nickname = scrapy.Field()
     real_name = scrapy.Field()
     category_position = scrapy.Field()
-    win_streak = scrapy.Field()
-    win_ko = scrapy.Field()
-    win_subm = scrapy.Field()
     strike_prec = scrapy.Field()
     grap_prec = scrapy.Field()
-
+    height = scrapy.Field()
+    armWingspan = scrapy.Field()
+    legWingspan = scrapy.Field()
