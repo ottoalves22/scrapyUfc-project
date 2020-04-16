@@ -11,12 +11,12 @@ connect('ufcData', host=MONGO_URI)
 
 class UfcSpider(scrapy.Spider):
     name =  'ufc'
-    allowed_domains = ["espn.com", "ufc.com"]
+    #allowed_domains = ["espn.com", "ufc.com"]
     fightersUrls = []
-    ufc = 'https://www.ufc.com'
+    ufc = 'https://www.ufc.com.br'
 
     def start_requests(self):
-        urls = ['https://www.ufc.com/rankings']
+        urls = ['https://www.ufc.com.br/rankings']
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parseCategoryList)
 
@@ -47,8 +47,8 @@ class UfcSpider(scrapy.Spider):
         loaderFighter.add_value('category_position', response.xpath('normalize-space(.//*[@class="c-hero__headline-suffix"])').extract_first())
         loaderFighter.add_value('strike_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[1]/div/div/div[1]/div/svg/text/text()').extract_first())
         loaderFighter.add_value('grap_prec', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[2]/div/div/div[1]/div/svg/text/text()').extract_first())
-        bio = response.xpath('//*[@class="c-bio__info-details"]')
-        loaderFighter.add_value('height', bio.xpath('.//div[3]/div[1]/div[1]/text()').extract_first())
-        loaderFighter.add_value('armWingspan', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[8]/div/div/div/div[3]/div[1]/div[4]/div[2]/div[2]/text()').extract_first())
-        loaderFighter.add_value('legWingspan', response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[8]/div/div/div/div[3]/div[1]/div[4]/div[3]/div[2]/text()').extract_first())
+        #bio = response.xpath('//*[@class="c-bio__info-details"]')
+        loaderFighter.add_value('height', response.xpath('.//*[@class="c-bio__row--3col"][1]/div[@class="c-bio__field"][2]/div[2]/text()').extract_first())
+        loaderFighter.add_value('armWingspan', response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][2]/div[2]/text()').extract_first())
+        loaderFighter.add_value('legWingspan', response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][3]/div[2]/text()').extract_first())
         yield loaderFighter.load_item()
