@@ -2,11 +2,14 @@ import scrapy
 from scrapy.loader import ItemLoader
 from spiderufc.items import SpiderFighterItem
 from mongoengine import connect
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from models import Fighter
+from pathlib import Path
 
-MONGO_URI = os.getenv("MONGO_URI")
+sett = str(Path(__file__).parent.parent) + '/settings.txt'
+f = open(sett, 'r')
+
+MONGO_URI = f.readline()
+print(MONGO_URI)
 connect('ufcData', host=MONGO_URI)
 
 class UfcSpider(scrapy.Spider):
@@ -40,6 +43,9 @@ class UfcSpider(scrapy.Spider):
 
     def parseFighterInfo(self, response):
 
+        #for f in Fighter.objects:
+        #    print(f)
+
         loaderFighter = ItemLoader(item=SpiderFighterItem(), response=response)
 
         loaderFighter.add_value('nickname', response.xpath('normalize-space(.//*[@class="field field-name-nickname"])').extract_first())
@@ -52,3 +58,6 @@ class UfcSpider(scrapy.Spider):
         loaderFighter.add_value('armWingspan', response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][2]/div[2]/text()').extract_first())
         loaderFighter.add_value('legWingspan', response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][3]/div[2]/text()').extract_first())
         yield loaderFighter.load_item()
+
+    #def mongoInsert(self, nickname, realName, cat_pos, strikePrc, grapPrc, height, arms, legs):
+        #todo tratar precisoes pra number

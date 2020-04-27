@@ -9,7 +9,6 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-
 BOT_NAME = 'spiderufc'
 
 SPIDER_MODULES = ['spiderufc.spiders']
