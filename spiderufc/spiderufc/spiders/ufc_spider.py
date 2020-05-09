@@ -38,13 +38,8 @@ class UfcSpider(scrapy.Spider):
         for fighter in self.fightersUrls:
             yield scrapy.Request(url=fighter, callback=self.parseFighterInfo)
 
-        print(self.fightersUrls)
-
 
     def parseFighterInfo(self, response):
-
-        #for f in Fighter.objects:
-        #    print(f)
 
         loaderFighter = ItemLoader(item=SpiderFighterItem(), response=response)
 
@@ -59,5 +54,14 @@ class UfcSpider(scrapy.Spider):
         loaderFighter.add_value('legWingspan', response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][3]/div[2]/text()').extract_first())
         yield loaderFighter.load_item()
 
-    #def mongoInsert(self, nickname, realName, cat_pos, strikePrc, grapPrc, height, arms, legs):
+    def mongoInsert(self, nickname, realName, cat_pos, strikePrc, grapPrc, height, arms, legs):
+        fighter = Fighter()
+        fighter.nickname = nickname
+        fighter.real_name = realName
+        fighter.category_position = cat_pos
+        fighter.height = float(height)
+        fighter.armWingspan = float(arms)
+        fighter.legWingspan = float(legs)
+        fighter.strike_prec = int(strikePrc.replace('%', ''))
+        fighter.grap_prec = int(grapPrc.replace('%', ''))
         #todo tratar precisoes pra number
