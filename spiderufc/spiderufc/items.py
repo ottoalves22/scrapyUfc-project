@@ -17,5 +17,5 @@ class SpiderFighterItem(scrapy.Item):
     strike_prec = scrapy.Field()
     grap_prec = scrapy.Field()
     height = scrapy.Field()
-    armWingspan = scrapy.Field()
-    legWingspan = scrapy.Field()
+    arm_wingspan = scrapy.Field()
+    leg_wingspan = scrapy.Field()
