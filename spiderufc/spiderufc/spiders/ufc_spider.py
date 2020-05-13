@@ -43,13 +43,14 @@ class UfcSpider(scrapy.Spider):
 
         nickname = response.xpath('normalize-space(.//*[@class="field field-name-nickname"])').extract_first()
         real_name = response.xpath('normalize-space(.//*[@class="field field-name-name"])').extract_first()
-        category_position = response.xpath('normalize-space(.//*[@class="c-hero__headline-suffix"])').extract_first()
+        category_position = response.xpath('normalize-space(/html/body/div[1]/div/main/div[1]/div/div/div/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/text())').extract_first()
         strike_prec = response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[1]/div/div/div[1]/div/svg/text/text()').extract_first()
         grap_prec = response.xpath('/html/body/div[1]/div/main/div[1]/div/div/div/div[2]/div[5]/div/section/div[2]/div/div/div[1]/div/svg/text/text()').extract_first()
+        #bio = response.xpath('//*[@class="c-bio__info-details"]')
         height = response.xpath('.//*[@class="c-bio__row--3col"][1]/div[@class="c-bio__field"][2]/div[2]/text()').extract_first()
         arm_wingspan = response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][2]/div[2]/text()').extract_first()
         leg_wingspan = response.xpath('.//*[@class="c-bio__row--3col"][2]/div[@class="c-bio__field"][3]/div[2]/text()').extract_first()
-        yield #self.mongoInsert(nickname, real_name, category_position, strike_prec, grap_prec, height, arm_wingspan, leg_wingspan)
+        yield self.mongoInsert(nickname, real_name, category_position, strike_prec, grap_prec, height, arm_wingspan, leg_wingspan)
 
     def mongoInsert(self, nickname, realName, cat_pos, strikePrc, grapPrc, height, arms, legs):
         fighter = Fighter()
