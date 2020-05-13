@@ -7,7 +7,7 @@ class Fighter(Document):
     strike_prec = IntField()
     grap_prec = IntField()
     height = FloatField()
-    armWingspan = FloatField()
-    legWingspan = FloatField()
+    arm_wingspan = FloatField()
+    leg_wingspan = FloatField()
 
     meta ={'collection': 'fighters'}
